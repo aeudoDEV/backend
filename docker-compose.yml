@@ -1,0 +1,19 @@
+services:
+ 
+  desafio_estoque:
+    image: postgres:14.3-alpine
+    container_name: desafio_estoque
+    restart: always
+    ports:
+      - 999:5432
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: senha
+      POSTGRES_DB: stock
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+ 
+volumes:
+  pgdata:
+   driver: local
+    
