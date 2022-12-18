@@ -8,21 +8,63 @@ export class CreateProductStock implements StockProductRepo {
 
   constructor(private prisma: PrismaService) {}
 
-  create(@Body() body:IStockProduct): Promise<any>
+  async create(data:IStockProduct): Promise<any>
   {
-    const {amountStock, productName, typeProduct} = body;
-    const createTest =  this.prisma.stockProduct.create({
-      data:{
-        productName,
-        amountStock,
-        typeProduct,
+    const stockProductAlreadyExists = await this.prisma.stockProduct.findFirst({
+      where: {
+        productName: data.productName
       }
     })
-    return createTest;
+
+    if(stockProductAlreadyExists){
+       throw new Error('test')
+    }
+
+    const stockProduct = await this.prisma.stockProduct.create({
+      data
+    })
+    return stockProduct;
   }
 
   list(): Promise<any>
   {
     return  this.prisma.stockProduct.findMany()
+  }
+
+  async findByProduct(name:string):Promise<any>{
+    
+  }
+  async update(id: string, data:IStockProduct):Promise<any>{
+    const test = await this.prisma.stockProduct.findUnique({
+      where: {
+        id
+      }
+    })
+    if(!test){
+      throw new Error('não existe')
+    }
+    const update = await this.prisma.stockProduct.update({
+      data,
+      where: {
+        id
+      }
+    })
+    return update
+  }
+
+  async delete(id: string){
+    const test = await this.prisma.stockProduct.findUnique({
+      where:{
+        id
+      }
+    })
+    if(!test){
+      throw new Error('n existe')
+    }
+    return await this.prisma.stockProduct.delete({
+      where:{
+        id
+      }
+    })
   }
 }

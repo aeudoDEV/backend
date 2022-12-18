@@ -1,4 +1,4 @@
-import { IsNotEmpty,Length } from "class-validator";
+import { IsNotEmpty,IsNumberString,Length, MaxLength, MinLength } from "class-validator";
 
 export class IStockProduct {
   @IsNotEmpty({
@@ -12,6 +12,5 @@ export class IStockProduct {
   @IsNotEmpty({
     message:"Digite um valor acima de 1"
   })
-  @Length(1, 9999999)
   amountStock: number;
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { IStockProduct } from './repositories/classes/stock-product-class';
 import { CreateProductStock } from './usecases/createProductStock';
 
@@ -11,15 +11,18 @@ export class AppController {
     return this.createProduct.list();
   }
   @Post('test')
-  async create(@Body() body:IStockProduct): Promise<void> {
-    const { amountStock, productName, typeProduct} = body;
-    
-    const createStock = this.createProduct.create({
-      amountStock,
-      productName,
-      typeProduct
-    })
+  async create(@Body() body:IStockProduct): Promise<any> { 
+    const createStock = this.createProduct.create(body)
+    const productAlready = await this.createProduct.findByProduct(body.productName);
 
-    return createStock;
+    return createStock
+  }
+  @Put('/test/:id')
+  async update(@Param('id') id: string, @Body() body:IStockProduct){
+    return await this.createProduct.update(id, body);
+  }
+  @Delete('/delete/:id')
+  async delete(@Param('id') id: string){
+    return await this.createProduct.delete(id);
   }
 }
